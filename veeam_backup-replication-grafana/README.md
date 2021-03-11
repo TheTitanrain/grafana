@@ -16,7 +16,7 @@ But in case you can't read Spanish:
 * Add the next to your telegraf.conf and restart the telegraf service. Mind the Script path, also if your environment is quite large, you need to tune the interval and timeout and set them higher times 600s for example
 ```
  [[inputs.exec]]
-  commands = ["powershell C:/veeam-stats.ps1"]
+  commands = ["powershell.exe -file 'C:/Program Files/Veeam/Backup and Replication/veeam-stats.ps1'"]
   name_override = "veeamstats"
   interval = "60s"
   timeout = "60s"
