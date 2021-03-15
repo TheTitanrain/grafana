@@ -179,7 +179,6 @@ $successSessionsBackupCopy = @($sessionListBackupCopy | Where-Object{$_.Result -
 $warningSessionsBackupCopy = @($sessionListBackupCopy | Where-Object{$_.Result -eq "Warning"})
 $failsSessionsBackupCopy = @($sessionListBackupCopy | Where-Object{$_.Result -eq "Failed"})
 $runningSessionsBackupCopy = @($allSessions | Where-Object{$_.State -eq "Working" -and $_.JobType -eq "SimpleBackupCopyPolicy"})
-$IdleSessionsBackupCopy = @($allSessions | Where-Object{$_.State -eq "Idle" -and $_.JobType -eq "SimpleBackupCopyPolicy"})
 $failedSessionsBackupCopy = @($sessionListBackupCopy | Where-Object{($_.Result -eq "Failed") -and ($_.WillBeRetried -ne "True")})
 #endregion
 
@@ -215,6 +214,15 @@ $runningSessionsAgentBackup = @($allSessions | Where-Object{$_.State -eq "Workin
 $failedSessionsAgentBackup = @($sessionListAgentBackup | Where-Object{($_.Result -eq "Failed") -and ($_.WillBeRetried -ne "True")})
 #endregion
 
+
+#region:  Preparing Backup Copy Session Total
+$successSessionsTotal = $successSessionsBackup + $successSessionsBackupCopy + $successSessionsRepl + $successSessionsNas + $successSessionsNasCopy + $successSessionsAgentBackup
+$warningSessionsTotal = $warningSessionsBackup + $warningSessionsBackupCopy + $warningSessionsRepl + $warningSessionsNas + $warningSessionsNasCopy + $warningSessionsAgentBackup
+$failsSessionsTotal = $failsSessionsBackup + $failsSessionsBackupCopy + $failsSessionsRepl + $failsSessionsNas + $failsSessionsNasCopy + $failsSessionsAgentBackup
+$runningSessionsTotal = $runningSessionsBackup + $runningSessionsBackupCopy + $runningSessionsRepl + $runningSessionsNas + $runningSessionsNasCopy + $runningSessionsAgentBackup
+$failedSessionsTotal = $failedSessionsBackup + $failedSessionsBackupCopy + $failedSessionsRepl + $failedSessionsNas + $failedSessionsNasCopy + $failedSessionsAgentBackup 
+#endregion
+
 #region: Repository Report
 $RepoReport = $repositoryList | Get-vPCRepoInfo | Select-Object @{Name="Repository Name"; Expression = {$_.Target}},
                                                                 @{Name="Host"; Expression = {$_.RepoHost}},
@@ -243,19 +251,15 @@ $number_endpoints++;
 $Count = $successSessionsBackup.Count
 $body="veeam-stats successfulbackups=$Count"
 Write-Host $body
-
 $Count = $warningSessionsBackup.Count
 $body="veeam-stats warningbackups=$Count"
 Write-Host $body
-
 $Count = $failsSessionsBackup.Count
 $body="veeam-stats failesbackups=$Count"
 Write-Host $body
-
 $Count = $failedSessionsBackup.Count
 $body="veeam-stats failedbackups=$Count"
 Write-Host $body
-
 $Count = $runningSessionsBackup.Count
 $body="veeam-stats runningbackups=$Count"
 Write-Host $body
@@ -263,35 +267,25 @@ Write-Host $body
 $Count = $successSessionsBackupCopy.Count
 $body="veeam-stats successfulbackupcopys=$Count"
 Write-Host $body
-
 $Count = $warningSessionsBackupCopy.Count
 $body="veeam-stats warningbackupcopys=$Count"
 Write-Host $body
-
 $Count = $failsSessionsBackupCopy.Count
 $body="veeam-stats failesbackupcopys=$Count"
 Write-Host $body
-
 $Count = $failedSessionsBackupCopy.Count
 $body="veeam-stats failedbackupcopys=$Count"
 Write-Host $body
-
 $Count = $runningSessionsBackupCopy.Count
 $body="veeam-stats runningbackupcopys=$Count"
-Write-Host $body
-
-$Count = $IdleSessionsBackupCopy.Count
-$body="veeam-stats idlebackupcopys=$Count"
 Write-Host $body
 
 $Count = $successSessionsRepl.Count
 $body="veeam-stats successfulreplications=$Count"
 Write-Host $body
-
 $Count = $warningSessionsRepl.Count
 $body="veeam-stats warningreplications=$Count"
 Write-Host $body
-
 $Count = $failsSessionsRepl.Count
 $body="veeam-stats failesreplications=$Count"
 Write-Host $body
@@ -299,23 +293,18 @@ Write-Host $body
 $Count = $runningSessionsNas.Count
 $body="veeam-stats runningSessionsNas=$Count"
 Write-Host $body
-
 $Count = $successSessionsNas.Count
 $body="veeam-stats successSessionsNas=$Count"
 Write-Host $body
-
 $Count = $warningSessionsNas.Count
 $body="veeam-stats warningSessionsNas=$Count"
 Write-Host $body
-
 $Count = $failsSessionsNas.Count
 $body="veeam-stats failsSessionsNas=$Count"
 Write-Host $body
-
 $Count = $failedSessionsNas.Count
 $body="veeam-stats failedSessionsNas=$Count"
 Write-Host $body
-
 $Count = $failedSessionsNas.Count
 $body="veeam-stats failedSessionsNas=$Count"
 Write-Host $body
@@ -324,19 +313,15 @@ Write-Host $body
 $Count = $runningSessionsNasCopy.Count
 $body="veeam-stats runningSessionsNasCopy=$Count"
 Write-Host $body
-
 $Count = $successSessionsNasCopy.Count
 $body="veeam-stats successSessionsNasCopy=$Count"
 Write-Host $body
-
 $Count = $warningSessionsNasCopy.Count
 $body="veeam-stats warningSessionsNasCopy=$Count"
 Write-Host $body
-
 $Count = $failsSessionsNasCopy.Count
 $body="veeam-stats failsSessionsNasCopy=$Count"
 Write-Host $body
-
 $Count = $failedSessionsNasCopy.Count
 $body="veeam-stats failedSessionsNasCopy=$Count"
 Write-Host $body
@@ -344,21 +329,33 @@ Write-Host $body
 $Count = $runningSessionsAgentBackup.Count
 $body="veeam-stats runningSessionsAgentBackup=$Count"
 Write-Host $body
-
 $Count = $successSessionsAgentBackup.Count
 $body="veeam-stats successSessionsAgentBackup=$Count"
 Write-Host $body
-
 $Count = $warningSessionsAgentBackup.Count
 $body="veeam-stats warningSessionsAgentBackup=$Count"
 Write-Host $body
-
 $Count = $failsSessionsAgentBackup.Count
 $body="veeam-stats failsSessionsAgentBackup=$Count"
 Write-Host $body
-
 $Count = $failedSessionsAgentBackup.Count
 $body="veeam-stats failedSessionsAgentBackup=$Count"
+Write-Host $body
+
+$Count = $successSessionsTotal.Count
+$body="veeam-stats successSessionsTotal=$Count"
+Write-Host $body
+$Count = $warningSessionsTotal.Count
+$body="veeam-stats warningSessionsTotal=$Count"
+Write-Host $body
+$Count = $failsSessionsTotal.Count
+$body="veeam-stats failsSessionsTotal=$Count"
+Write-Host $body
+$Count = $runningSessionsTotal.Count
+$body="veeam-stats runningSessionsTotal=$Count"
+Write-Host $body
+$Count = $failedSessionsTotal.Count
+$body="veeam-stats failedSessionsTotal=$Count"
 Write-Host $body
 
 $body="veeam-stats totalbackuptransfer=$totalTransferedBackup"
