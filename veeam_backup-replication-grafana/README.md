@@ -1,6 +1,7 @@
 How to monitor a Veeam Environment using Powershell, Telegraf, InfluxDB and Grafana
 ===================
 ![image](https://user-images.githubusercontent.com/1952721/110907698-81ec3100-8359-11eb-90d7-ef5ddbabecf7.png)
+![image](https://user-images.githubusercontent.com/1952721/111090345-200b1180-857b-11eb-985d-655d21bca4e5.png)
 
 This project consists in a Powershell script to retrieve the Veeam Backup & Replication information about last jobs, etc, and save it into JSON which we send to InfluxDB using Telegraf, then in Grafana: a Dashboard is created to present all the information.
 
